@@ -64,12 +64,14 @@ void main()
 	double time_spent;
 
 	begin = clock();
-	#pragma omp parallel for 
+	#pragma omp parallel for private(i,j,k)
 	for (i=0;i<N;i++)
 	{
 		//printf("Thread rank: %d\n", omp_get_thread_num());
+		
 		for (j=0;j<N;j++)
 		{
+
 			for (k=0;k<N;k++)
 			{
 				Prod[i][j]+=M1[i][k]*M2[k][j];
