@@ -1,8 +1,9 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<mpi.h>
 //#include<unistd.h>
-#define N 4
+#define N 5
 
 int** Make2DIntArray(int arraySizeX, int arraySizeY) {
 int** theArray;
@@ -50,21 +51,31 @@ void printmat(int** matrix)
 	printf("\n");
 }
 
-void main()
+void main(int argc, char *argv[])
 {
 	int** M1=Make2DIntArray(N,N);
 	int** M2=Make2DIntArray(N,N);
 	int** Prod=Make2DIntArray(N,N);
-	
+	int initialization, rank, size;
 	printmat(M1);
 	printmat(M2);
 	init_zeros(Prod);
 	int i,j,k;
 	
+	initialization=MPI_Init(int argc, char *argv[]);
+	if(!initialization)
+	{
+		printf("\n MPI not initialized");
+		return NULL;
+	}
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	printf ("\n My rank is: %d", rank);
+	printf("\n My size is: %d", size);
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 	
-	#pragma omp parallel for private(i,j,k)
+
 	for (i=0;i<N;i++)
 	{
 		//printf("Thread rank: %d\n", omp_get_thread_num());
@@ -79,6 +90,7 @@ void main()
 		}
 	}
 
+	MPI_Finalize();
 	gettimeofday(&end, NULL);
 
 	double delta = ((end.tv_sec  - start.tv_sec) * 1000000u + 
