@@ -60,10 +60,9 @@ void main()
 	//printmat(M2);
 	init_zeros(Prod);
 	int i,j,k;
-	clock_t begin, end;
-	double time_spent;
 
-	begin = clock();
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
 	for (i=0;i<N;i++)
 	{
 		for (j=0;j<N;j++)
@@ -74,9 +73,13 @@ void main()
 			}
 		}
 	}
-	end = clock();
-	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("\nTime spent=%f", time_spent);
+
+	gettimeofday(&end, NULL);
+
+	double delta = ((end.tv_sec  - start.tv_sec) * 1000000u + 
+	         end.tv_usec - start.tv_usec) / 1.e6;
+
+	printf("\nTime spent=%f", delta);
 	
 	//printmat(Prod);
 }

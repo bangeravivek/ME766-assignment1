@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<time.h>
 //#include<unistd.h>
-#define N 1000
+#define N 4
 
 int** Make2DIntArray(int arraySizeX, int arraySizeY) {
 int** theArray;
@@ -56,14 +56,14 @@ void main()
 	int** M2=Make2DIntArray(N,N);
 	int** Prod=Make2DIntArray(N,N);
 	
-	//printmat(M1);
-	//printmat(M2);
+	printmat(M1);
+	printmat(M2);
 	init_zeros(Prod);
 	int i,j,k;
-	clock_t begin, end;
-	double time_spent;
-
-	begin = clock();
+	
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
+	
 	#pragma omp parallel for private(i,j,k)
 	for (i=0;i<N;i++)
 	{
@@ -78,10 +78,15 @@ void main()
 			}
 		}
 	}
-	end = clock();
-	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("\nTime spent=%f", time_spent);
+
+	gettimeofday(&end, NULL);
+
+	double delta = ((end.tv_sec  - start.tv_sec) * 1000000u + 
+	         end.tv_usec - start.tv_usec) / 1.e6;
+
+	printmat(Prod);
+	printf("\nTime spent=%f \n", delta);
 	
-	//printmat(Prod);
+	
 }
 
