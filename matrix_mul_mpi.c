@@ -66,7 +66,7 @@ void main(int argc, char *argv[])
 	double** M1=Make2DdoubleArray(N,N);
 	double** M2=Make2DdoubleArray(N,N);
 	double** Prod=Make2DdoubleArray(N,N);
-	int initialization, rank, size, dest, extra;
+	int rank, size, dest, extra;
 	int slaves, stripsize, rows, offset, master_rows, loopsize;
 	//printmat(M1);
 	//printmat(M2);
@@ -75,7 +75,7 @@ void main(int argc, char *argv[])
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 	MPI_Status status;
-	initialization=MPI_Init(&argc, &argv);
+	MPI_Init(&argc, &argv);
 	//printf("\n Initialization=%d",initialization);
 	/*if(!initialization)
 	{
@@ -128,7 +128,7 @@ void main(int argc, char *argv[])
 		for (i=1;i<=slaves;i++)
 		{
 			MPI_Recv(&offset, 1, MPI_INT, i, FROM_SLAVE, MPI_COMM_WORLD, &status);
-			MPI_Recv(&stripsize, 1, MPI_INT, i, FROM_SLAVE, MPI_COMM_WORLD, &status);
+			MPI_Recv(&rows, 1, MPI_INT, i, FROM_SLAVE, MPI_COMM_WORLD, &status);
 			MPI_Recv(&Prod[offset][0], rows*N, MPI_DOUBLE, i, FROM_SLAVE, MPI_COMM_WORLD, &status);
 		}
 		printf("\n Received Rows");
@@ -140,25 +140,30 @@ void main(int argc, char *argv[])
 	{
 		printf("\n Rank %d starting receiveing", rank);
 		MPI_Recv(&offset, 1, MPI_INT, 0, FROM_MASTER, MPI_COMM_WORLD, &status);
-		MPI_Recv(&stripsize, 1, MPI_INT, 0, FROM_MASTER, MPI_COMM_WORLD, &status);
+		printf("\n Rank %d received offset", rank);
+		MPI_Recv(&rows, 1, MPI_INT, 0, FROM_MASTER, MPI_COMM_WORLD, &status);
+		printf("\n Rank %d received rows", rank);
 		MPI_Recv(&M1, rows*N, MPI_DOUBLE, 0 , FROM_MASTER, MPI_COMM_WORLD, &status);
+		printf("\n Rank %d received M1", rank);
 		//MPI_Recv(&M2, N*N, MPI_DOUBLE, 0, FROM_MASTER, MPI_COMM_WORLD, &status);
 		printf("\n Rank %d starting matrix multiply", rank);
-		loopsize=offset+stripsize;
-		for (i=offset;i<stripsize;i++)
+		loopsize=offset+rows;
+		for (i=0;i<rows;i++)
 		{
+			printf("\n Entering outermost loop");
 			for (j=0;j<N;j++)
 			{
 
 				for (k=0;k<N;k++)
 				{
+					printf("\n Entering innermost loop");
 					Prod[i][j]+=M1[i][k]*M2[k][j];
 				}
 			}
 		}
 		MPI_Send(&offset, 1, MPI_INT, 0, FROM_SLAVE, MPI_COMM_WORLD);
-		MPI_Send(&stripsize, 1, MPI_INT, 0, FROM_SLAVE, MPI_COMM_WORLD);
-		MPI_Send(&Prod, stripsize*N, MPI_DOUBLE, 0, FROM_SLAVE, MPI_COMM_WORLD);
+		MPI_Send(&rows, 1, MPI_INT, 0, FROM_SLAVE, MPI_COMM_WORLD);
+		MPI_Send(&Prod, rows*N, MPI_DOUBLE, 0, FROM_SLAVE, MPI_COMM_WORLD);
 	}
 	MPI_Finalize();
 	gettimeofday(&end, NULL);
