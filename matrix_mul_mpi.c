@@ -62,7 +62,7 @@ void main(int argc, char *argv[])
 	init_zeros(Prod);
 	int i,j,k;
 	
-	initialization=MPI_Init(int argc, char *argv[]);
+	initialization=MPI_Init(&argc, &argv);
 	if(!initialization)
 	{
 		printf("\n MPI not initialized");

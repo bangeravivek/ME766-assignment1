@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<time.h>
 //#include<unistd.h>
-#define N 4
+#define N 1000
 
 int** Make2DIntArray(int arraySizeX, int arraySizeY) {
 int** theArray;
@@ -56,8 +56,8 @@ void main()
 	int** M2=Make2DIntArray(N,N);
 	int** Prod=Make2DIntArray(N,N);
 	
-	printmat(M1);
-	printmat(M2);
+	//printmat(M1);
+	//printmat(M2);
 	init_zeros(Prod);
 	int i,j,k;
 	
@@ -84,7 +84,7 @@ void main()
 	double delta = ((end.tv_sec  - start.tv_sec) * 1000000u + 
 	         end.tv_usec - start.tv_usec) / 1.e6;
 
-	printmat(Prod);
+	//printmat(Prod);
 	printf("\nTime spent=%f \n", delta);
 	
 	
