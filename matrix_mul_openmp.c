@@ -4,12 +4,12 @@
 //#include<unistd.h>
 #define N 1000
 
-int** Make2DIntArray(int arraySizeX, int arraySizeY) {
-int** theArray;
-theArray = (int**) malloc(arraySizeX*sizeof(int*));
+double** Make2DdoubleArray(int arraySizeX, int arraySizeY) {
+double** theArray;
+theArray = (double**) malloc(arraySizeX*sizeof(double*));
 int i;
 for (i = 0; i < arraySizeX; i++)
-   theArray[i] = (int*) malloc(arraySizeY*sizeof(int));
+   theArray[i] = (double*) malloc(arraySizeY*sizeof(double));
 int j;
 
 for (i=0;i<arraySizeX;i++)
@@ -23,7 +23,7 @@ for (i=0;i<arraySizeX;i++)
    return theArray;
 }
 
-void init_zeros(int** matrix)
+void init_zeros(double** matrix)
 {
 	int i,j;
 	for (i=0;i<N;i++)
@@ -35,7 +35,7 @@ void init_zeros(int** matrix)
 	}
 }
 
-void printmat(int** matrix)
+void printmat(double** matrix)
 {
 	int i,j;
 	
@@ -44,7 +44,7 @@ void printmat(int** matrix)
 		printf("\n");
 		for (j=0;j<N;j++)
 		{
-			printf("%d \t",matrix[i][j]);
+			printf("%f \t",matrix[i][j]);
 		}
 	}
 	printf("\n");
@@ -52,9 +52,9 @@ void printmat(int** matrix)
 
 void main()
 {
-	int** M1=Make2DIntArray(N,N);
-	int** M2=Make2DIntArray(N,N);
-	int** Prod=Make2DIntArray(N,N);
+	double** M1=Make2DdoubleArray(N,N);
+	double** M2=Make2DdoubleArray(N,N);
+	double** Prod=Make2DdoubleArray(N,N);
 	
 	//printmat(M1);
 	//printmat(M2);
