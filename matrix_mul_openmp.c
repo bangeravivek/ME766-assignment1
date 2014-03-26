@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<time.h>
 //#include<unistd.h>
-#define N 1000
+#define N 5000
 
 double** Make2DdoubleArray(int arraySizeX, int arraySizeY) {
 double** theArray;
@@ -27,7 +27,7 @@ void init_zeros(double** matrix)
 {
 	int i,j;
 	for (i=0;i<N;i++)
-	{	
+	{
 		for (j=0;j<N;j++)
 		{
 			matrix[i][j]=0;
